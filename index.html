@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feliz Cumpleaños Karen 🎉</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: fadeIn 2s ease;
+    }
+
+    h1 {
+      color: #ff4b5c;
+    }
+
+    p {
+      font-size: 18px;
+      color: #333;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #ff4b5c;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ff1e3c;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="card">
+  <h1>🎂 Feliz Cumpleaños Karen 🎂</h1>
+  <p id="mensaje">Haz clic para ver tu sorpresa...</p>
+  <button onclick="mostrarSorpresa()">Sorpresa 🎁</button>
+</div>
+
+<script>
+  function mostrarSorpresa() {
+    document.getElementById("mensaje").innerHTML = "Que la pases increíble, que sigas cumpliendo todo lo que te propones y recuerda...<br><br><strong>¡Eres una persona increíble! :)</strong>";
+    iniciarConfetti();
+  }
+
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  let pieces = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function crearConfetti() {
+    return {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 100,
+      color: `hsl(${Math.random()*360}, 100%, 50%)`,
+      tilt: Math.floor(Math.random() * 10) - 10
+    };
+  }
+
+  function iniciarConfetti() {
+    pieces = [];
+    for (let i = 0; i < 150; i++) {
+      pieces.push(crearConfetti());
+    }
+    animar();
+  }
+
+  function animar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < pieces.length; i++) {
+      let p = pieces[i];
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.r, p.r);
+    }
+    actualizar();
+    requestAnimationFrame(animar);
+  }
+
+  function actualizar() {
+    for (let i = 0; i < pieces.length; i++) {
+      let p = pieces[i];
+      p.y += Math.cos(p.d) + 2 + p.r / 2;
+      p.x += Math.sin(0.01);
+      if (p.y > canvas.height) {
+        pieces[i] = crearConfetti();
+        pieces[i].y = -10;
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
